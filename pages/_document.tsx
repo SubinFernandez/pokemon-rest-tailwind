@@ -1,5 +1,5 @@
 import Document, { Html, Head, Main, NextScript } from 'next/document'
-import { PageContainer, PageContainerItem } from '../src/components'
+import { PageContainer, PageContainerItem, Header, Footer } from '../src/components'
 
 class MyDocument extends Document {
   render() {
@@ -13,14 +13,14 @@ class MyDocument extends Document {
         <body>
           <PageContainer>
             <PageContainerItem>
-              <header>Header placeholder</header>
+              <Header />
             </PageContainerItem>
             <PageContainerItem ariaRole='main' fillHeight>
               <Main />
               <NextScript />
             </PageContainerItem>
             <PageContainerItem>
-              <footer>Footer placeholder</footer>
+              <Footer />
             </PageContainerItem>
           </PageContainer>
         </body>
