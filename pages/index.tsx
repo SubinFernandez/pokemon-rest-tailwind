@@ -1,3 +1,4 @@
+import { PokemonList } from '@src/components'
 import type { NextPage } from 'next'
 import Head from 'next/head'
 
@@ -8,7 +9,7 @@ const Home: NextPage = () => {
         <title>Pokemon demo webapp</title>
         <meta name="description" content="Demo Pokemon webapp that uses Pokemon REST APIs and TailwindCSS" />
       </Head>
-      <h1>Hello Pokemon</h1>
+      <PokemonList />
     </>
   )
 }
