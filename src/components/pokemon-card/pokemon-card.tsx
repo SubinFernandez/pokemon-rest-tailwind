@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import useAxios from 'axios-hooks'
 
+// @TODO: Debug why '@src/' path fails in Jest test
+import { PokemonImage } from '../../components'
 import { Pokemon, PokemonFetchInfo } from '@src/types/pokemon.type'
 
 interface PokemonCardProps {
@@ -25,12 +27,8 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({ dataFetchProps }) => {
         <div
           className='bg-gray-100 p-2 rounded-lg h-full'
         >
-          <img
-            src={pokemon.sprites.other['official-artwork'].front_default || undefined}
-            alt=""
-            width="475"
-            height="475"
-            loading="lazy"
+          <PokemonImage
+            url={pokemon.sprites.other['official-artwork'].front_default ?? ''}
           />
           <div className='flex flex-wrap justify-between items-end'>
             {/* Name */}
