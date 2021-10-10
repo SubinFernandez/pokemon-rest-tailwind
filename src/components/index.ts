@@ -2,3 +2,4 @@ export { PageContainer, PageContainerItem } from './page-container/page-containe
 export { Header } from './header/header'
 export { Footer } from './footer/footer'
 export { PokemonList } from './pokemon-list/pokemon-list'
+export { PokemonCard } from './pokemon-card/pokemon-card'
