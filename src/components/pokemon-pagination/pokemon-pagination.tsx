@@ -1,21 +1,32 @@
 import React from 'react'
+import { useRouter } from 'next/router'
+
 import ReactPaginate from 'react-paginate'
+// @TODO: Debug why '@src/' path fails in Jest test
+import { DEFAULTS } from '../../helpers/constants'
 
 interface PokemonPaginationProps {
   pokemonCount: number
   pokemonPerPage?: number
+  selectedPage?: number
+  onPageChange: (pageNumber: number) => void
 }
 
 export const PokemonPagination: React.FC<PokemonPaginationProps> = ({
   pokemonCount,
-  pokemonPerPage = 20
+  pokemonPerPage = DEFAULTS.pokemon.pokemonsPerPage,
+  selectedPage = 0,
+  onPageChange
 }) => {
+  const router = useRouter()
+
   return (
     <div data-name='PokemonPagination' className='overflow-scroll'>
       <ReactPaginate
         pageCount={Math.ceil(pokemonCount / pokemonPerPage)}
         pageRangeDisplayed={1}
         marginPagesDisplayed={2}
+        forcePage={selectedPage}
         previousLabel='&laquo;'
         nextLabel='&raquo;'
         containerClassName='flex m-2'
@@ -29,6 +40,8 @@ export const PokemonPagination: React.FC<PokemonPaginationProps> = ({
         activeLinkClassName='text-white'
         nextClassName='border border-solid border-gray-300 rounded-tr rounded-br text-blue-600'
         nextLinkClassName='flex justify-center items-center px-2 py-1 w-10'
+        onPageChange={page => onPageChange(page.selected)}
+        
       />
     </div>
   )

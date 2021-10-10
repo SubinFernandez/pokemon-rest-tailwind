@@ -4,3 +4,10 @@ export const REST_API = {
     pokemon: 'pokemon'
   }
 }
+
+export const DEFAULTS = {
+  pokemon: {
+    firstPokemon: 0,
+    pokemonsPerPage: 20
+  }
+}

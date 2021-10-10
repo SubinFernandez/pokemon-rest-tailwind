@@ -23,7 +23,7 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({ dataFetchProps }) => {
       {error && <div>Error: {error.message}</div>}
       {pokemon && (
         <div
-          className='bg-gray-100 p-2 rounded-lg'
+          className='bg-gray-100 p-2 rounded-lg h-full'
         >
           <img
             src={pokemon.sprites.other['official-artwork'].front_default || undefined}
@@ -46,11 +46,11 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({ dataFetchProps }) => {
           </div>
 
           {/* Abilties */}
-          <div className='-mx-1 my-1'>
+          <div className='flex flex-wrap -mx-1 my-1'>
             {pokemon.abilities.map(ability => (
               <span
                 key={ability.ability.name}
-                className='m-1 p-1 border border-solid border-gray-400 rounded uppercase text-xs'
+                className='m-1 p-1 border border-solid border-gray-400 rounded uppercase text-xs whitespace-nowrap'
               >
                 {ability.ability.name}
               </span>
