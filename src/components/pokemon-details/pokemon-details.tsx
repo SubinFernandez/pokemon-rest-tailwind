@@ -3,7 +3,7 @@ import useAxios from 'axios-hooks'
 
 import { Pokemon } from '@src/types/pokemon.type'
 import { REST_API } from '../../helpers/constants'
-import { PokemonImage, PokemonDetailsSpecies } from '../../components'
+import { PokemonImage, PokemonDetailsSpecies, PokemonDetailsStats } from '../../components'
 
 interface PokemonDetailsProps {
   name: string
@@ -44,6 +44,9 @@ export const PokemonDetails: React.FC<PokemonDetailsProps> = ({ name }) => {
             </div>
             <div className='w-full md:w-1/2 p-2'>
               <PokemonDetailsSpecies name={pokemon.species.name} url={pokemon.species.url} />
+            </div>
+            <div className='w-full md:w-1/2 p-2'>
+              <PokemonDetailsStats stats={pokemon.stats} />
             </div>
           </div>
         </>

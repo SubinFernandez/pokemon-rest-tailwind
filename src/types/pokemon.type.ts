@@ -17,6 +17,7 @@ export interface Pokemon {
   abilities: PokemonAbility[]
   sprites: PokemonSprites
   species: NamedAPIResource
+  stats: PokemonStat[]
 }
 
 export interface PokemonAbility {
@@ -56,4 +57,10 @@ export interface PokemonSpecies {
   is_legendary: boolean
   is_mythical: boolean
   shape: NamedAPIResource
+}
+
+export interface PokemonStat {
+  base_stat: number
+  effort: number
+  stat: NamedAPIResource
 }

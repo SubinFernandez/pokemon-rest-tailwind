@@ -5,6 +5,7 @@ export { PageContainer, PageContainerItem } from './page-container/page-containe
 export { PokemonCard } from './pokemon-card/pokemon-card'
 export { PokemonDetails } from './pokemon-details/pokemon-details'
 export { PokemonDetailsSpecies } from './pokemon-details-species/pokemon-details-species'
+export { PokemonDetailsStats } from './pokemon-details-stats/pokemon-details-stats'
 export { PokemonImage } from './pokemon-image/pokemon-image'
 export { PokemonList } from './pokemon-list/pokemon-list'
 export { PokemonPagination } from './pokemon-pagination/pokemon-pagination'
