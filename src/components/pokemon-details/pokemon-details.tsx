@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import router, { useRouter } from 'next/router'
 import useAxios from 'axios-hooks'
 
 import { Pokemon } from '@src/types/pokemon.type'
@@ -10,6 +11,7 @@ interface PokemonDetailsProps {
 }
 
 export const PokemonDetails: React.FC<PokemonDetailsProps> = ({ name }) => {
+  const router = useRouter()
   const [pokemon, setPokemon] = useState<Pokemon>()
   const [{ data, loading, error }, execute] = useAxios(`${REST_API.url}/${REST_API.endpoints.pokemon}/${name}`, {
     manual: true
@@ -32,7 +34,7 @@ export const PokemonDetails: React.FC<PokemonDetailsProps> = ({ name }) => {
   }, [data])
 
   return (
-    <div data-name='PokemonDetails' className='max-w-screen-xl my-0 mx-auto px-2'>
+    <div data-name='PokemonDetails' className='max-w-screen-xl mt-0 mb-20 mx-auto px-2'>
       {loading && <div>Loading {name}...</div>}
       {error && <div>Error: {error.message}</div>}
       {pokemon && (
@@ -49,6 +51,7 @@ export const PokemonDetails: React.FC<PokemonDetailsProps> = ({ name }) => {
               <PokemonDetailsStats stats={pokemon.stats} />
             </div>
           </div>
+          <button className='link-button ml-2 mt-4' onClick={() => router.back()}>Back to Pokemon list</button>
         </>
       )}
     </div>

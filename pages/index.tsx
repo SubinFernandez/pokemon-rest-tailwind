@@ -1,6 +1,8 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 
+import { Hero } from '@src/components'
+
 const Home: NextPage = () => {
   return (
     <>
@@ -8,6 +10,7 @@ const Home: NextPage = () => {
         <title>Pokemon demo webapp</title>
         <meta name="description" content="Demo Pokemon webapp that uses Pokemon REST APIs and TailwindCSS" />
       </Head>
+      <Hero />
     </>
   )
 }

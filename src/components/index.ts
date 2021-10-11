@@ -1,5 +1,6 @@
 export { Footer } from './footer/footer'
 export { Header } from './header/header'
+export { Hero } from './hero/hero'
 export { NameValuePair } from './name-value-pair/name-value-pair'
 export { PageContainer, PageContainerItem } from './page-container/page-container'
 export { PokemonCard } from './pokemon-card/pokemon-card'

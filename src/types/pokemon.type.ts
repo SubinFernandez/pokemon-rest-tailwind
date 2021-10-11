@@ -52,7 +52,7 @@ export interface PokemonSpecies {
   color: NamedAPIResource
   generation: NamedAPIResource
   growth_rate: NamedAPIResource
-  habitat: NamedAPIResource
+  habitat?: NamedAPIResource
   is_baby: boolean
   is_legendary: boolean
   is_mythical: boolean

@@ -29,11 +29,13 @@ export const PokemonDetailsSpecies: React.FC<NamedAPIResource> = ({
               value={species.color.name}
               cssClasses={nameValuePairCSSClasses}
             />
-            <NameValuePair
-              name='Habitat'
-              value={species.habitat.name}
-              cssClasses={nameValuePairCSSClasses}
-            />
+            {species.habitat &&
+              <NameValuePair
+                name='Habitat'
+                value={species.habitat?.name}
+                cssClasses={nameValuePairCSSClasses}
+              />
+            }
             <NameValuePair
               name='Spape'
               value={species.shape.name}
