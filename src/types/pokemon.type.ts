@@ -1,13 +1,12 @@
+export interface NamedAPIResource {
+  name: string
+  url: string
+}
 export interface GetPokemonsResponse {
   count: number
   next: string | null
   previous: string | null
-  results: PokemonFetchInfo[]
-}
-
-export interface PokemonFetchInfo {
-  name: string
-  url: string
+  results: NamedAPIResource[]
 }
 
 export interface Pokemon {
@@ -17,15 +16,13 @@ export interface Pokemon {
   weight: number
   abilities: PokemonAbility[]
   sprites: PokemonSprites
+  species: NamedAPIResource
 }
 
 export interface PokemonAbility {
   is_hidden: boolean
   slot: number
-  ability: {
-    name: string
-    url: string
-  }
+  ability: NamedAPIResource
 }
 
 export interface PokemonSprites {
@@ -46,4 +43,17 @@ export interface PokemonSprites {
 export interface PokemonArtwork {
   front_default: string | null
   front_female: string | null
+}
+
+export interface PokemonSpecies {
+  base_happiness: number
+  capture_rate: number
+  color: NamedAPIResource
+  generation: NamedAPIResource
+  growth_rate: NamedAPIResource
+  habitat: NamedAPIResource
+  is_baby: boolean
+  is_legendary: boolean
+  is_mythical: boolean
+  shape: NamedAPIResource
 }

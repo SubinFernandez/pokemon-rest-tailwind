@@ -2,11 +2,11 @@ import React from 'react'
 import { render } from '@testing-library/react'
 import { axe, toHaveNoViolations } from 'jest-axe'
 import { PokemonCard } from './pokemon-card'
-import { PokemonFetchInfo } from '@src/types/pokemon.type'
+import { NamedAPIResource } from '@src/types/pokemon.type'
 
 expect.extend(toHaveNoViolations)
 
-const mockPokemonFetchProps: PokemonFetchInfo = {
+const mockPokemonFetchProps: NamedAPIResource = {
   name: 'mockemon',
   url: 'https://www.example.com'
 }

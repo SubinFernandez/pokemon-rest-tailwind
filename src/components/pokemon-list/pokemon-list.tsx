@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import axios, { AxiosError } from 'axios'
 
-import { GetPokemonsResponse, PokemonFetchInfo } from '@src/types/pokemon.type'
+import { GetPokemonsResponse, NamedAPIResource } from '@src/types/pokemon.type'
 // @TODO: Debug why '@src/' path fails in Jest test
 import { DEFAULTS, REST_API } from '../../helpers/constants'
 import { PokemonCard } from '../../components'
@@ -10,7 +10,7 @@ import { PokemonPagination } from '../pokemon-pagination/pokemon-pagination'
 
 export const PokemonList: React.FC = () => {
   const router = useRouter()
-  const [pokemons, setPokemons] = useState<PokemonFetchInfo[]>()
+  const [pokemons, setPokemons] = useState<NamedAPIResource[]>()
   const [pokemonsCount, setPokemonsCount] = useState(0)
   const [pokemonOffset, setPokemonOffset] = useState<number>()
   const [pokemonLimit, setPokemonLimit] = useState<number>()
@@ -81,7 +81,7 @@ export const PokemonList: React.FC = () => {
           />
           <div className='flex flex-wrap overflow-hidden'>
             {pokemons?.map(pokemon => (
-              <PokemonCard key={pokemon.name} dataFetchProps={pokemon} />
+              <PokemonCard key={pokemon.name} name={pokemon.name} url={pokemon.url} />
             ))}
           </div>
           <PokemonPagination

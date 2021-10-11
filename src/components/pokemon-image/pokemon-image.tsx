@@ -16,13 +16,14 @@ export const PokemonImage: React.FC<PokemonImageProps> = ({
   eagerLoad
 }) => {
   return (
-    <div data-name='PokemonImage' className='bg-gray-100 p-2 rounded-lg'>
+    <div data-name='PokemonImage' className='bg-gray-100 p-2 rounded-lg text-center'>
       <img
         src={url}
         alt={altText}
         width={width}
         height={height}
         loading={eagerLoad ? 'eager' : 'lazy'}
+        className='inline-block'
       />
     </div>
   )

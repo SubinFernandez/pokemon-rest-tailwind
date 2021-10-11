@@ -3,14 +3,14 @@ import useAxios from 'axios-hooks'
 
 // @TODO: Debug why '@src/' path fails in Jest test
 import { PokemonImage } from '../../components'
-import { Pokemon, PokemonFetchInfo } from '@src/types/pokemon.type'
+import { Pokemon, NamedAPIResource } from '@src/types/pokemon.type'
 
-interface PokemonCardProps {
-  dataFetchProps: PokemonFetchInfo
-}
-export const PokemonCard: React.FC<PokemonCardProps> = ({ dataFetchProps }) => {
+export const PokemonCard: React.FC<NamedAPIResource> = ({ 
+  name,
+  url
+ }) => {
   const [pokemon, setPokemon] = useState<Pokemon>()
-  const [{ data, loading, error }] = useAxios(dataFetchProps.url)
+  const [{ data, loading, error }] = useAxios(url)
 
   useEffect(() => {
     if (data) setPokemon(data as Pokemon)
@@ -21,7 +21,7 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({ dataFetchProps }) => {
       data-name='PokemonCard'
       className='p-2 w-full sm:w-full md:w-1/2 lg:w-1/3 xl:w-1/4'
     >
-      {loading && <div>Loading {dataFetchProps.name}...</div>}
+      {loading && <div>Loading {name}...</div>}
       {error && <div>Error: {error.message}</div>}
       {pokemon && (
         <div
