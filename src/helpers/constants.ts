@@ -9,6 +9,9 @@ export const REST_API = {
 export const DEFAULTS = {
   pokemon: {
     firstPokemon: 0,
-    pokemonsPerPage: 20
+    pokemonsPerPage: 20,
+    pokemonsPerPageOptions: [
+      10, 20, 50
+    ]
   }
 }

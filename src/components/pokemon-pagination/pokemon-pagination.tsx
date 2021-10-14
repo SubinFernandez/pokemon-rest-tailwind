@@ -21,7 +21,7 @@ export const PokemonPagination: React.FC<PokemonPaginationProps> = ({
   const router = useRouter()
 
   return (
-    <div data-name='PokemonPagination' className='overflow-scroll'>
+    <div data-name='PokemonPagination' className='inline-block align-middle overflow-scroll'>
       <ReactPaginate
         pageCount={Math.ceil(pokemonCount / pokemonPerPage)}
         pageRangeDisplayed={1}
@@ -29,7 +29,7 @@ export const PokemonPagination: React.FC<PokemonPaginationProps> = ({
         forcePage={selectedPage}
         previousLabel='&laquo;'
         nextLabel='&raquo;'
-        containerClassName='flex m-2'
+        containerClassName='inline-flex'
         previousClassName='border border-solid border-gray-300 border-r-0 rounded-tl rounded-bl text-blue-600'
         previousLinkClassName='flex justify-center items-center px-2 py-1 w-10'
         pageClassName='border border-solid border-gray-300 border-r-0 text-blue-600'

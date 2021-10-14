@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import router, { useRouter } from 'next/router'
+import { useRouter } from 'next/router'
 import useAxios from 'axios-hooks'
 
 import { Pokemon } from '@src/types/pokemon.type'
@@ -23,7 +23,7 @@ export const PokemonDetails: React.FC<PokemonDetailsProps> = ({ name }) => {
    */
   useEffect(() => {
     if (name) execute()
-  }, [name])
+  }, [name, execute])
 
   /**
    * Upon data response from fetch request,

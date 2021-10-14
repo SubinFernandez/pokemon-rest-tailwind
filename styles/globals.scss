@@ -9,3 +9,16 @@
 .link-button {
   @apply inline-block border border-solid border-blue-600 text-blue-600 rounded px-6 py-2 hover:bg-blue-100 hover:no-underline
 }
+
+.select {
+  @apply inline-block relative align-middle;
+
+  &::after {
+    @apply absolute block right-3 -translate-y-1/2 top-1/2 w-2 h-2 border-2 border-t-0 border-l-0 border-solid border-gray-400 transform rotate-45;
+    content: ''
+  }
+
+  select {
+    @apply appearance-none border border-gray-300 border-solid rounded pl-2 pr-10 py-1
+  }
+}

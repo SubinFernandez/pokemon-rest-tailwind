@@ -5,8 +5,8 @@ import axios, { AxiosError } from 'axios'
 import { GetPokemonsResponse, NamedAPIResource } from '@src/types/pokemon.type'
 // @TODO: Debug why '@src/' path fails in Jest test
 import { DEFAULTS, REST_API } from '../../helpers/constants'
-import { PokemonCard } from '../../components'
-import { PokemonPagination } from '../pokemon-pagination/pokemon-pagination'
+import { PokemonCard, PokemonPagination, PokemonLimit } from '../../components'
+import { makeQueryString, nextRouterQueryUpdate } from '../../helpers/next-router-query'
 
 export const PokemonList: React.FC = () => {
   const router = useRouter()
@@ -18,7 +18,20 @@ export const PokemonList: React.FC = () => {
   const [dataFetchError, setDataFetchError] = useState<AxiosError | undefined>(undefined)
 
   const handlePaginationChange = (pageNumber: number) => {
-    router.push(router.basePath.concat(`?offset=${(pokemonLimit || DEFAULTS.pokemon.pokemonsPerPage) * pageNumber}&limit=${pokemonLimit || DEFAULTS.pokemon.pokemonsPerPage}`))
+    // router.push(router.basePath.concat(`?offset=${pokemonLimit * pageNumber}&limit=${pokemonLimit}`))
+    if (pokemonLimit) {
+      let currentQuery = router.query
+      currentQuery = nextRouterQueryUpdate(currentQuery, 'offset', (pokemonLimit * pageNumber).toString())
+      currentQuery = nextRouterQueryUpdate(currentQuery, 'limit', pokemonLimit.toString())
+      router.push(`${router.asPath.split('?')[0]}/?${makeQueryString(currentQuery)}`)
+    }
+  }
+
+  const handlePokemonLimitChange = (limit: string) => {
+    setPokemonLimit(Number(limit))
+    router.push(
+      `${router.asPath.split('?')[0]}/?${makeQueryString(nextRouterQueryUpdate(router.query, 'limit', limit))}`
+    )
   }
 
   /**
@@ -26,11 +39,25 @@ export const PokemonList: React.FC = () => {
    * set offset and limit
    */
   useEffect(() => {
-    if (router) {
+    if (router?.isReady) {
       const { offset, limit } = router.query
-  
+
       setPokemonOffset(Number(offset || DEFAULTS.pokemon.firstPokemon))
       setPokemonLimit(Number(limit || DEFAULTS.pokemon.pokemonsPerPage))
+
+      if (offset) {
+        const nOffset = Number(offset)
+        if (!isNaN(nOffset) && nOffset !== pokemonOffset) {
+          setPokemonOffset(nOffset)
+        }
+      }
+
+      if (limit) {
+        const nLimit = Number(limit)
+        if (!isNaN(nLimit) && nLimit !== pokemonLimit) {
+          setPokemonLimit(nLimit)
+        }
+      }
     }
   }, [router])
 
@@ -39,34 +66,36 @@ export const PokemonList: React.FC = () => {
    * fetch required pokemons
    */
   useEffect(() => {
-    axios
-      .get(`${REST_API.url}/${REST_API.endpoints.pokemon}`, {
-        params: {
-          offset: pokemonOffset,
-          limit: pokemonLimit
-        }
-      })
-      .then(res => {
-        if (res.data) {
-          const pokemonsResponse: GetPokemonsResponse = res.data
-
-          if (pokemonsResponse?.results) {
-            setPokemons(pokemonsResponse.results)
-            setPokemonsCount(pokemonsResponse.count)
+    if (pokemonOffset !== undefined && pokemonLimit !== undefined) {
+      axios
+        .get(`${REST_API.url}/${REST_API.endpoints.pokemon}`, {
+          params: {
+            offset: pokemonOffset,
+            limit: pokemonLimit
           }
-        }
+        })
+        .then(res => {
+          if (res.data) {
+            const pokemonsResponse: GetPokemonsResponse = res.data
 
-      })
-      .catch(err => {
-        setDataFetchError(err)
-      })
-      .finally(() => {
-        setDataFetched(true)
-      })
+            if (pokemonsResponse?.results) {
+              setPokemons(pokemonsResponse.results)
+              setPokemonsCount(pokemonsResponse.count)
+            }
+          }
+
+        })
+        .catch(err => {
+          setDataFetchError(err)
+        })
+        .finally(() => {
+          setDataFetched(true)
+        })
+    }
   }, [pokemonOffset, pokemonLimit])
 
   return (
-    <div data-name='PokemonList' className='max-w-screen-xl my-0 mx-auto'>
+    <div data-name='PokemonList' className='max-w-screen-xl px-4 my-0 mx-auto'>
       {/* @TODO: Replace with a spinner or suspense */}
       {!dataFetched && <div>Loading...</div>}
       {/* @TODO: Replace with a better error handler */}
@@ -79,7 +108,12 @@ export const PokemonList: React.FC = () => {
             selectedPage={pokemonOffset && pokemonLimit ? pokemonOffset / pokemonLimit : 0}
             onPageChange={handlePaginationChange}
           />
-          <div className='flex flex-wrap overflow-hidden'>
+          <PokemonLimit
+            currentLimit={pokemonLimit || DEFAULTS.pokemon.pokemonsPerPage}
+            limitOptions={DEFAULTS.pokemon.pokemonsPerPageOptions}
+            onLimitChange={handlePokemonLimitChange}
+          />
+          <div className='flex flex-wrap -mx-2 overflow-hidden'>
             {pokemons?.map(pokemon => (
               <PokemonCard key={pokemon.name} name={pokemon.name} url={pokemon.url} />
             ))}
@@ -89,6 +123,11 @@ export const PokemonList: React.FC = () => {
             pokemonPerPage={pokemonLimit}
             selectedPage={pokemonOffset && pokemonLimit ? pokemonOffset / pokemonLimit : 0}
             onPageChange={handlePaginationChange}
+          />
+          <PokemonLimit
+            currentLimit={pokemonLimit || DEFAULTS.pokemon.pokemonsPerPage}
+            limitOptions={DEFAULTS.pokemon.pokemonsPerPageOptions}
+            onLimitChange={handlePokemonLimitChange}
           />
         </>
       )}
