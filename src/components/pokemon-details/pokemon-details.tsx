@@ -42,7 +42,7 @@ export const PokemonDetails: React.FC<PokemonDetailsProps> = ({ name }) => {
           <h1 className='text-3xl text-center font-bold capitalize my-8'>{name}</h1>
           <div className='flex flex-wrap'>
             <div className='w-full md:w-1/2 p-2'>
-              <PokemonImage url={pokemon.sprites.other['official-artwork'].front_default || ''} />
+              <PokemonImage url={pokemon.sprites.other['official-artwork'].front_default || pokemon.sprites.front_default || ''} />
             </div>
             <div className='w-full md:w-1/2 p-2'>
               <PokemonDetailsSpecies name={pokemon.species.name} url={pokemon.species.url} />

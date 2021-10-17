@@ -1,5 +1,4 @@
 import React from 'react'
-import { useRouter } from 'next/router'
 
 import ReactPaginate from 'react-paginate'
 // @TODO: Debug why '@src/' path fails in Jest test
@@ -18,7 +17,6 @@ export const PokemonPagination: React.FC<PokemonPaginationProps> = ({
   selectedPage = 0,
   onPageChange
 }) => {
-  const router = useRouter()
 
   return (
     <div data-name='PokemonPagination' className='inline-block align-middle overflow-scroll'>

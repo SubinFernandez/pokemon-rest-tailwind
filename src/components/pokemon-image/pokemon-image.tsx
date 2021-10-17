@@ -19,11 +19,11 @@ export const PokemonImage: React.FC<PokemonImageProps> = ({
     <div data-name='PokemonImage' className='bg-gray-100 p-2 rounded-lg text-center'>
       <img
         src={url}
-        alt={altText}
+        alt={altText || url?.length ? '' : 'No artwork found for this Pokemon'}
         width={width}
         height={height}
         loading={eagerLoad ? 'eager' : 'lazy'}
-        className='inline-block'
+        className='inline-flex justify-center items-center'
       />
     </div>
   )

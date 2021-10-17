@@ -22,3 +22,15 @@
     @apply appearance-none border border-gray-300 border-solid rounded pl-2 pr-10 py-1
   }
 }
+
+.input {
+  @apply border border-gray-300 border-solid rounded px-2 py-1
+}
+
+.dropdown-list-item {
+  @apply px-2 py-1 bg-white hover:bg-blue-600 hover:text-white
+}
+
+.dropdown-list-item-selected {
+  @apply bg-blue-600 text-white
+}

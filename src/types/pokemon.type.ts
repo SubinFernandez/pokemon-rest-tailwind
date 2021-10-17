@@ -2,7 +2,7 @@ export interface NamedAPIResource {
   name: string
   url: string
 }
-export interface GetPokemonsResponse {
+export interface NamedAPIResourceList {
   count: number
   next: string | null
   previous: string | null
@@ -63,4 +63,14 @@ export interface PokemonStat {
   base_stat: number
   effort: number
   stat: NamedAPIResource
+}
+
+export interface Ability {
+  pokemon: AbilityPokemons[]
+}
+
+export interface AbilityPokemons {
+  is_hidden: boolean
+  pokemon: NamedAPIResource
+  slot: number
 }

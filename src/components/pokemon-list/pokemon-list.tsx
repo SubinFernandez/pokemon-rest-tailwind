@@ -2,11 +2,12 @@ import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import axios, { AxiosError } from 'axios'
 
-import { GetPokemonsResponse, NamedAPIResource } from '@src/types/pokemon.type'
+import { NamedAPIResource, NamedAPIResourceList } from '@src/types/pokemon.type'
 // @TODO: Debug why '@src/' path fails in Jest test
 import { DEFAULTS, REST_API } from '../../helpers/constants'
 import { PokemonCard, PokemonPagination, PokemonLimit } from '../../components'
 import { makeQueryString, nextRouterQueryUpdate } from '../../helpers/next-router-query'
+import { PokemonFilter } from '../pokemon-filter/pokemon-filter'
 
 export const PokemonList: React.FC = () => {
   const router = useRouter()
@@ -16,6 +17,7 @@ export const PokemonList: React.FC = () => {
   const [pokemonLimit, setPokemonLimit] = useState<number>()
   const [dataFetched, setDataFetched] = useState(false)
   const [dataFetchError, setDataFetchError] = useState<AxiosError | undefined>(undefined)
+  const [filteredPokemons, setFilteredPokemons] = useState<NamedAPIResource[]>()
 
   const handlePaginationChange = (pageNumber: number) => {
     // router.push(router.basePath.concat(`?offset=${pokemonLimit * pageNumber}&limit=${pokemonLimit}`))
@@ -76,7 +78,7 @@ export const PokemonList: React.FC = () => {
         })
         .then(res => {
           if (res.data) {
-            const pokemonsResponse: GetPokemonsResponse = res.data
+            const pokemonsResponse: NamedAPIResourceList = res.data
 
             if (pokemonsResponse?.results) {
               setPokemons(pokemonsResponse.results)
@@ -102,33 +104,52 @@ export const PokemonList: React.FC = () => {
       {dataFetchError && <div>Error: {dataFetchError.message}</div>}
       {pokemons && (
         <>
-          <PokemonPagination
-            pokemonCount={pokemonsCount}
-            pokemonPerPage={pokemonLimit}
-            selectedPage={pokemonOffset && pokemonLimit ? pokemonOffset / pokemonLimit : 0}
-            onPageChange={handlePaginationChange}
-          />
-          <PokemonLimit
-            currentLimit={pokemonLimit || DEFAULTS.pokemon.pokemonsPerPage}
-            limitOptions={DEFAULTS.pokemon.pokemonsPerPageOptions}
-            onLimitChange={handlePokemonLimitChange}
-          />
+          {!filteredPokemons && (
+            <div className='flex flex-wrap justify-between items-center -mx-2'>
+              <div className='p-2'>
+                <PokemonPagination
+                  pokemonCount={pokemonsCount}
+                  pokemonPerPage={pokemonLimit}
+                  selectedPage={pokemonOffset && pokemonLimit ? pokemonOffset / pokemonLimit : 0}
+                  onPageChange={handlePaginationChange}
+                />
+              </div>
+              <div className='p-2'>
+                <PokemonLimit
+                  currentLimit={pokemonLimit || DEFAULTS.pokemon.pokemonsPerPage}
+                  limitOptions={DEFAULTS.pokemon.pokemonsPerPageOptions}
+                  onLimitChange={handlePokemonLimitChange}
+                />
+              </div>
+            </div>
+          )}
+          <PokemonFilter onFilter={setFilteredPokemons} />
+
           <div className='flex flex-wrap -mx-2 overflow-hidden'>
-            {pokemons?.map(pokemon => (
+            {(filteredPokemons || pokemons)?.map(pokemon => (
               <PokemonCard key={pokemon.name} name={pokemon.name} url={pokemon.url} />
             ))}
           </div>
-          <PokemonPagination
-            pokemonCount={pokemonsCount}
-            pokemonPerPage={pokemonLimit}
-            selectedPage={pokemonOffset && pokemonLimit ? pokemonOffset / pokemonLimit : 0}
-            onPageChange={handlePaginationChange}
-          />
-          <PokemonLimit
-            currentLimit={pokemonLimit || DEFAULTS.pokemon.pokemonsPerPage}
-            limitOptions={DEFAULTS.pokemon.pokemonsPerPageOptions}
-            onLimitChange={handlePokemonLimitChange}
-          />
+
+          {!filteredPokemons && (
+            <div className='flex flex-wrap justify-between items-center -mx-2'>
+              <div className='p-2'>
+                <PokemonPagination
+                  pokemonCount={pokemonsCount}
+                  pokemonPerPage={pokemonLimit}
+                  selectedPage={pokemonOffset && pokemonLimit ? pokemonOffset / pokemonLimit : 0}
+                  onPageChange={handlePaginationChange}
+                />
+              </div>
+              <div className='p-2'>
+                <PokemonLimit
+                  currentLimit={pokemonLimit || DEFAULTS.pokemon.pokemonsPerPage}
+                  limitOptions={DEFAULTS.pokemon.pokemonsPerPageOptions}
+                  onLimitChange={handlePokemonLimitChange}
+                />
+              </div>
+            </div>
+          )}
         </>
       )}
     </div>

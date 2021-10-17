@@ -31,7 +31,7 @@ export const PokemonCard: React.FC<NamedAPIResource> = ({
               className='bg-gray-100 hover:bg-blue-100 p-2 rounded-lg h-full'
             >
               <PokemonImage
-                url={pokemon.sprites.other['official-artwork'].front_default ?? ''}
+                url={pokemon.sprites.other['official-artwork'].front_default || pokemon.sprites.front_default || ''}
               />
               <div className='flex flex-wrap justify-between items-end'>
                 {/* Name */}

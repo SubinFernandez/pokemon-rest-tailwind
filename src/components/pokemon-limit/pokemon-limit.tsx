@@ -12,7 +12,7 @@ export const PokemonLimit: React.FC<PokemonLimitProps> = ({
   onLimitChange
 }) => {
   return (
-    <label className='whitespace-nowrap'>
+    <label data-name='PokemonLimit' className='whitespace-nowrap'>
       <span className='inline-block align-middle pr-2'>Show per page</span>
       <div className='select'>
         <select
