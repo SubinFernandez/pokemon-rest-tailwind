@@ -19,7 +19,7 @@ export const PokemonPagination: React.FC<PokemonPaginationProps> = ({
 }) => {
 
   return (
-    <div data-name='PokemonPagination' className='inline-block align-middle overflow-scroll'>
+    <div data-name='PokemonPagination' className='inline-block align-middle overflow-x-auto'>
       <ReactPaginate
         pageCount={Math.ceil(pokemonCount / pokemonPerPage)}
         pageRangeDisplayed={1}
