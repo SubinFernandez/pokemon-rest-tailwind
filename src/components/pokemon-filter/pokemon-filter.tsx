@@ -3,6 +3,7 @@ import useAxios from 'axios-hooks'
 import Autocomplete from 'react-autocomplete'
 import debounce from 'lodash/debounce'
 import classnames from 'classnames'
+import { FilterIcon } from '@heroicons/react/outline'
 
 import { Ability, NamedAPIResource, NamedAPIResourceList } from '@src/types/pokemon.type'
 import { LOCAL_STORAGE_KYES, REST_API } from '../../helpers/constants'
@@ -70,15 +71,16 @@ export const PokemonFilter: React.FC<PokemonFilterProps> = ({ onFilter }) => {
   }, [dataPokemonsOfAbility, onFilter])
 
   return (
-    <div data-name='PokemonFilter' className='-mx-2'>
+    <div data-name='PokemonFilter' className='flex items-center -mx-2'>
+      {(pokemons || abilities) && <FilterIcon className='inline-block m-2 w-5 h-5 flex-grow sm:flex-grow-0' />}
       {pokemons && (
-        <label className='inline-block m-2'>
+        <label className='inline-block m-2 w-1/2 sm:w-auto'>
           <span className='sr-only'>Filter by name <span className='text-sm italic text-gray-400'>({pokemons.length})</span></span>
           <Autocomplete
             items={pokemons}
             getItemValue={(item: NamedAPIResource) => item.name}
             inputProps={{
-              className: 'input mr-2',
+              className: 'input w-full',
               placeholder: 'Filter by name'
             }}
             renderItem={(item: NamedAPIResource, isHighlighted) => (
@@ -99,17 +101,20 @@ export const PokemonFilter: React.FC<PokemonFilterProps> = ({ onFilter }) => {
               setSelectedPokemon(val)
               setSelectedAbility('')
             }}
+            wrapperProps={{
+              className: 'w-full'
+            }}
           />
         </label>
       )}
       {abilities && (
-        <label className='inline-block m-2'>
+        <label className='inline-block m-2 w-1/2 sm:w-auto'>
           <span className='sr-only'>Filter by ability <span className='text-sm italic text-gray-400'>({abilities.length})</span></span>
           <Autocomplete
             items={abilities}
             getItemValue={(item: NamedAPIResource) => item.name}
             inputProps={{
-              className: 'input',
+              className: 'input w-full',
               placeholder: 'Filter by ability'
             }}
             renderItem={(item: NamedAPIResource, isHighlighted) => (
@@ -129,6 +134,9 @@ export const PokemonFilter: React.FC<PokemonFilterProps> = ({ onFilter }) => {
             onSelect={val => {
               setSelectedPokemon('')
               setSelectedAbility(val)
+            }}
+            wrapperProps={{
+              className: 'w-full'
             }}
           />
         </label>

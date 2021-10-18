@@ -130,7 +130,6 @@ export const PokemonList: React.FC = () => {
       {!dataFetched && <div>Loading...</div>}
       {/* @TODO: Replace with a better error handler */}
       {dataFetchError && <div>Error: {dataFetchError.message}</div>}
-      <button onClick={() => window.scrollTo(0, 250)}>Scroll</button>
       {pokemons && (
         <>
           {!filteredPokemons && (
