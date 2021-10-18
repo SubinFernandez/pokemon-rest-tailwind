@@ -4,9 +4,10 @@ import axios, { AxiosError } from 'axios'
 import debounce from 'lodash/debounce'
 
 import { NamedAPIResource, NamedAPIResourceList } from '@src/types/pokemon.type'
+import { SortByType } from '@src/types/data.types'
 // @TODO: Debug why '@src/' path fails in Jest test
 import { DEFAULTS, REST_API } from '../../helpers/constants'
-import { PokemonCard, PokemonPagination, PokemonLimit } from '../../components'
+import { PokemonCard, PokemonPagination, PokemonLimit, PokemonSort } from '../../components'
 import { makeQueryString, nextRouterQueryUpdate } from '../../helpers/next-router-query'
 import { PokemonFilter } from '../pokemon-filter/pokemon-filter'
 import { useAppSettingContext } from '@src/contexts/app'
@@ -21,6 +22,8 @@ export const PokemonList: React.FC = () => {
   const [dataFetched, setDataFetched] = useState(false)
   const [dataFetchError, setDataFetchError] = useState<AxiosError | undefined>(undefined)
   const [filteredPokemons, setFilteredPokemons] = useState<NamedAPIResource[]>()
+  const [sortedPokemons, setSortedPokemons] = useState<NamedAPIResource[]>()
+  const [sortBy, setSortBy] = useState<SortByType>('none')
   const saveScrollPosRef = useRef({ save: true })
 
   const handlePageScroll = () => {
@@ -28,6 +31,7 @@ export const PokemonList: React.FC = () => {
       setGalleryScrollYPos(window.scrollY)
     }
   }
+
   const handlePageScrollDebounced = debounce(handlePageScroll, 50)
 
   const setPageScroll = () => {
@@ -113,6 +117,12 @@ export const PokemonList: React.FC = () => {
     }
   }, [pokemonOffset, pokemonLimit])
 
+  /**
+   * On component render set the scroll position, if any
+   * and add event listener to save scroll position.
+   * This is for better UX while returing to
+   * the gallery page from the details page
+   */
   useEffect(() => {
     setPageScroll()
 
@@ -124,16 +134,30 @@ export const PokemonList: React.FC = () => {
     }
   }, [])
 
+  /**
+   * Maintain a sorted copy of the Pokemon array
+   */
+  useEffect(() => {
+    setSortedPokemons([...((filteredPokemons || pokemons || []) as NamedAPIResource[])]?.sort((e1, e2) => {
+      if (sortBy === 'name') {
+        const ret = e1.name > e2.name ? 1 : -1
+        return ret
+      } else {
+        return 0
+      }
+    }))
+  }, [filteredPokemons, pokemons, sortBy])
+
   return (
-    <div data-name='PokemonList' className='max-w-screen-xl px-4 my-0 mx-auto'>
+    <div data-name='PokemonList' className='max-w-screen-xl px-4 my-4 mx-auto'>
       {/* @TODO: Replace with a spinner or suspense */}
       {!dataFetched && <div>Loading...</div>}
       {/* @TODO: Replace with a better error handler */}
       {dataFetchError && <div>Error: {dataFetchError.message}</div>}
       {pokemons && (
         <>
-          {!filteredPokemons && (
-            <div className='flex flex-wrap justify-between items-center -mx-2'>
+          <div className='flex flex-wrap justify-between items-center -mx-2'>
+            {!filteredPokemons && (
               <div className='p-2'>
                 <PokemonPagination
                   pokemonCount={pokemonsCount}
@@ -142,6 +166,9 @@ export const PokemonList: React.FC = () => {
                   onPageChange={handlePaginationChange}
                 />
               </div>
+            )}
+            <div className='flex-grow' />
+            {!filteredPokemons && (
               <div className='p-2'>
                 <PokemonLimit
                   currentLimit={pokemonLimit || DEFAULTS.pokemon.pokemonsPerPage}
@@ -149,18 +176,22 @@ export const PokemonList: React.FC = () => {
                   onLimitChange={handlePokemonLimitChange}
                 />
               </div>
+            )}
+            <div className='p-2'>
+              <PokemonSort sortBy={sortBy} onSortChange={setSortBy} />
             </div>
-          )}
+          </div>
+
           <PokemonFilter onFilter={setFilteredPokemons} />
 
           <div className='flex flex-wrap -mx-2 overflow-hidden'>
-            {(filteredPokemons || pokemons)?.map(pokemon => (
+            {sortedPokemons?.map(pokemon => (
               <PokemonCard key={pokemon.name} name={pokemon.name} url={pokemon.url} />
             ))}
           </div>
 
-          {!filteredPokemons && (
-            <div className='flex flex-wrap justify-between items-center -mx-2'>
+          <div className='flex flex-wrap justify-between items-center -mx-2'>
+            {!filteredPokemons && (
               <div className='p-2'>
                 <PokemonPagination
                   pokemonCount={pokemonsCount}
@@ -169,6 +200,9 @@ export const PokemonList: React.FC = () => {
                   onPageChange={handlePaginationChange}
                 />
               </div>
+            )}
+            <div className='flex-grow' />
+            {!filteredPokemons && (
               <div className='p-2'>
                 <PokemonLimit
                   currentLimit={pokemonLimit || DEFAULTS.pokemon.pokemonsPerPage}
@@ -176,8 +210,11 @@ export const PokemonList: React.FC = () => {
                   onLimitChange={handlePokemonLimitChange}
                 />
               </div>
+            )}
+            <div className='p-2'>
+              <PokemonSort sortBy={sortBy} onSortChange={setSortBy} />
             </div>
-          )}
+          </div>
         </>
       )}
     </div>

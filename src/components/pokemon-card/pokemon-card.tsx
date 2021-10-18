@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { memo, useEffect, useState } from 'react'
 import Link from 'next/link'
 import useAxios from 'axios-hooks'
 
@@ -6,7 +6,7 @@ import useAxios from 'axios-hooks'
 import { PokemonImage } from '../../components'
 import { Pokemon, NamedAPIResource } from '@src/types/pokemon.type'
 
-export const PokemonCard: React.FC<NamedAPIResource> = ({
+const PokemonCard: React.FC<NamedAPIResource> = ({
   name,
   url
 }) => {
@@ -48,14 +48,19 @@ export const PokemonCard: React.FC<NamedAPIResource> = ({
 
               {/* Abilties */}
               <div className='flex flex-wrap -mx-1 my-1'>
-                {pokemon.abilities.map(ability => (
-                  <span
-                    key={ability.ability.name}
-                    className='m-1 p-1 border border-solid border-gray-400 rounded uppercase text-xs whitespace-nowrap'
-                  >
-                    {ability.ability.name}
-                  </span>
-                ))}
+                {pokemon.abilities
+                  .sort((e1, e2) => {
+                    // Sort abilities by name
+                    return e1.ability.name > e2.ability.name ? 1 : -1
+                  })
+                  .map(ability => (
+                    <span
+                      key={ability.ability.name}
+                      className='m-1 p-1 border border-solid border-gray-400 rounded uppercase text-xs whitespace-nowrap'
+                    >
+                      {ability.ability.name}
+                    </span>
+                  ))}
               </div>
             </div>
           </a>
@@ -64,3 +69,5 @@ export const PokemonCard: React.FC<NamedAPIResource> = ({
     </div>
   )
 }
+
+export default memo(PokemonCard)

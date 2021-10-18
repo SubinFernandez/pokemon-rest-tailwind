@@ -21,8 +21,11 @@ export const DEFAULTS = {
 export const IS_BROWSER: boolean = typeof window !== 'undefined';
 
 export const LOCAL_STORAGE_KYES = {
-  filter: {
-    byName: 'byName',
-    byAbility: 'byAbility'
+  gallery: {
+    filter: {
+      byName: 'filter.byName',
+      byAbility: 'filter.byAbility'
+    },
+    sort: 'sort'
   }
 }

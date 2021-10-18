@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { memo, useCallback, useEffect, useState } from 'react'
 import useAxios from 'axios-hooks'
 import Autocomplete from 'react-autocomplete'
 import debounce from 'lodash/debounce'
@@ -12,7 +12,7 @@ interface PokemonFilterProps {
   onFilter: (pokemons: NamedAPIResource[] | undefined) => void
 }
 
-export const PokemonFilter: React.FC<PokemonFilterProps> = ({ onFilter }) => {
+export const PokemonFilter: React.FC<PokemonFilterProps> = memo(({ onFilter }) => {
   const [pokemons, setPokemons] = useState<NamedAPIResource[]>()
   const [abilities, setAbilities] = useState<NamedAPIResource[]>()
   const [selectedPokemon, setSelectedPokemon] = useState('')
@@ -22,7 +22,7 @@ export const PokemonFilter: React.FC<PokemonFilterProps> = ({ onFilter }) => {
   const [{ data: dataAbilities }] = useAxios(`${REST_API.url}/${REST_API.endpoints.ability}?limit=-1`)
   const [{ data: dataPokemonsOfAbility }, fetchPokemonsWithAbility] = useAxios(`${REST_API.url}/${REST_API.endpoints.ability}/${selectedAbility}`, { manual: true })
 
-  const applyFilter = debounce(() => {
+  const applyFilter = useCallback(debounce(() => {
     if (selectedPokemon.length && pokemons) {
       setFilteredPokemons(pokemons.filter(pokemon => pokemon.name.toLowerCase().includes(selectedPokemon.toLowerCase())))
     } else if (selectedAbility.length && abilities) {
@@ -32,7 +32,7 @@ export const PokemonFilter: React.FC<PokemonFilterProps> = ({ onFilter }) => {
     } else {
       setFilteredPokemons([])
     }
-  }, 300)
+  }, 200), [selectedPokemon, selectedAbility, pokemons, abilities])
 
   const resetFilter = () => {
     setSelectedPokemon('')
@@ -40,18 +40,18 @@ export const PokemonFilter: React.FC<PokemonFilterProps> = ({ onFilter }) => {
   }
 
   useEffect(() => {
-    const lsFilterByName = localStorage?.getItem(LOCAL_STORAGE_KYES.filter.byName)
-    const lsFilterByAbility = localStorage?.getItem(LOCAL_STORAGE_KYES.filter.byAbility)
+    const lsFilterByName = localStorage?.getItem(LOCAL_STORAGE_KYES.gallery.filter.byName)
+    const lsFilterByAbility = localStorage?.getItem(LOCAL_STORAGE_KYES.gallery.filter.byAbility)
     if (lsFilterByName) setSelectedPokemon(lsFilterByName)
     if (lsFilterByAbility) setSelectedAbility(lsFilterByAbility)
   }, [])
 
   useEffect(() => {
-    localStorage?.setItem(LOCAL_STORAGE_KYES.filter.byName, selectedPokemon)
+    localStorage?.setItem(LOCAL_STORAGE_KYES.gallery.filter.byName, selectedPokemon)
   }, [selectedPokemon])
 
   useEffect(() => {
-    localStorage?.setItem(LOCAL_STORAGE_KYES.filter.byAbility, selectedAbility)
+    localStorage?.setItem(LOCAL_STORAGE_KYES.gallery.filter.byAbility, selectedAbility)
   }, [selectedAbility])
 
   useEffect(() => {
@@ -161,4 +161,4 @@ export const PokemonFilter: React.FC<PokemonFilterProps> = ({ onFilter }) => {
       )}
     </div>
   )
-}
+})
