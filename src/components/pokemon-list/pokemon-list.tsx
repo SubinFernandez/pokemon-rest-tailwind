@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/router'
 import axios, { AxiosError } from 'axios'
+import debounce from 'lodash/debounce'
 
 import { NamedAPIResource, NamedAPIResourceList } from '@src/types/pokemon.type'
 // @TODO: Debug why '@src/' path fails in Jest test
@@ -8,9 +9,11 @@ import { DEFAULTS, REST_API } from '../../helpers/constants'
 import { PokemonCard, PokemonPagination, PokemonLimit } from '../../components'
 import { makeQueryString, nextRouterQueryUpdate } from '../../helpers/next-router-query'
 import { PokemonFilter } from '../pokemon-filter/pokemon-filter'
+import { useAppSettingContext } from '@src/contexts/app'
 
 export const PokemonList: React.FC = () => {
   const router = useRouter()
+  const { galleryScrollYPos, setGalleryScrollYPos } = useAppSettingContext()
   const [pokemons, setPokemons] = useState<NamedAPIResource[]>()
   const [pokemonsCount, setPokemonsCount] = useState(0)
   const [pokemonOffset, setPokemonOffset] = useState<number>()
@@ -18,6 +21,20 @@ export const PokemonList: React.FC = () => {
   const [dataFetched, setDataFetched] = useState(false)
   const [dataFetchError, setDataFetchError] = useState<AxiosError | undefined>(undefined)
   const [filteredPokemons, setFilteredPokemons] = useState<NamedAPIResource[]>()
+  const saveScrollPosRef = useRef({ save: true })
+
+  const handlePageScroll = () => {
+    if (saveScrollPosRef.current.save) {
+      setGalleryScrollYPos(window.scrollY)
+    }
+  }
+  const handlePageScrollDebounced = debounce(handlePageScroll, 50)
+
+  const setPageScroll = () => {
+    setTimeout(() => {
+      window.scrollTo({ top: galleryScrollYPos, left: 0, behavior: 'smooth' })
+    }, 500)
+  }
 
   const handlePaginationChange = (pageNumber: number) => {
     // router.push(router.basePath.concat(`?offset=${pokemonLimit * pageNumber}&limit=${pokemonLimit}`))
@@ -96,12 +113,24 @@ export const PokemonList: React.FC = () => {
     }
   }, [pokemonOffset, pokemonLimit])
 
+  useEffect(() => {
+    setPageScroll()
+
+    window.addEventListener('scroll', handlePageScrollDebounced)
+
+    return () => {
+      saveScrollPosRef.current.save = false
+      window.removeEventListener('scroll', handlePageScrollDebounced)
+    }
+  }, [])
+
   return (
     <div data-name='PokemonList' className='max-w-screen-xl px-4 my-0 mx-auto'>
       {/* @TODO: Replace with a spinner or suspense */}
       {!dataFetched && <div>Loading...</div>}
       {/* @TODO: Replace with a better error handler */}
       {dataFetchError && <div>Error: {dataFetchError.message}</div>}
+      <button onClick={() => window.scrollTo(0, 250)}>Scroll</button>
       {pokemons && (
         <>
           {!filteredPokemons && (
