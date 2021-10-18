@@ -21,6 +21,7 @@ const PokemonCard: React.FC<NamedAPIResource> = ({
     <div
       data-name='PokemonCard'
       className='p-2 w-full sm:w-full md:w-1/2 lg:w-1/3 xl:w-1/4'
+      role='listitem'
     >
       {loading && <div>Loading {name}...</div>}
       {error && <div>Error: {error.message}</div>}
@@ -35,7 +36,7 @@ const PokemonCard: React.FC<NamedAPIResource> = ({
               />
               <div className='flex flex-wrap justify-between items-end'>
                 {/* Name */}
-                <div className='font-bold capitalize mt-2'>{pokemon.name}</div>
+                <h2 className='font-bold capitalize mt-2'>{pokemon.name}</h2>
 
                 {/* Height & weight */}
                 <div className='text-sm'>

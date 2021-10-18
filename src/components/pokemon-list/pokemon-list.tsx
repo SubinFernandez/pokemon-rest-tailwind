@@ -156,6 +156,8 @@ export const PokemonList: React.FC = () => {
       {dataFetchError && <div>Error: {dataFetchError.message}</div>}
       {pokemons && (
         <>
+          <h1 className='text-3xl text-center font-bold my-8'>Gallery of Pokemons</h1>
+
           <div className='flex flex-wrap justify-between items-center -mx-2'>
             {!filteredPokemons && (
               <div className='p-2'>
@@ -184,7 +186,7 @@ export const PokemonList: React.FC = () => {
 
           <PokemonFilter onFilter={setFilteredPokemons} />
 
-          <div className='flex flex-wrap -mx-2 overflow-hidden'>
+          <div className='flex flex-wrap -mx-2 overflow-hidden' role='list'>
             {sortedPokemons?.map(pokemon => (
               <PokemonCard key={pokemon.name} name={pokemon.name} url={pokemon.url} />
             ))}
