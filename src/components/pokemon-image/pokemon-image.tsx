@@ -1,4 +1,5 @@
 import React from 'react'
+import Image from 'next/image'
 
 interface PokemonImageProps {
   url: string
@@ -17,7 +18,7 @@ export const PokemonImage: React.FC<PokemonImageProps> = ({
 }) => {
   return (
     <div data-name='PokemonImage' className='bg-gray-100 p-2 rounded-lg text-center'>
-      <img
+      <Image
         src={url}
         alt={altText || url?.length ? '' : 'No artwork found for this Pokemon'}
         width={width}
