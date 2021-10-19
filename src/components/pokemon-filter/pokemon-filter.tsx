@@ -1,8 +1,6 @@
 import React, { memo, useCallback, useEffect, useState } from 'react'
 import useAxios from 'axios-hooks'
-import Autocomplete from 'react-autocomplete'
 import debounce from 'lodash/debounce'
-import classnames from 'classnames'
 import { FilterIcon } from '@heroicons/react/outline'
 
 import {
@@ -128,94 +126,76 @@ export const PokemonFilter: React.FC<PokemonFilterProps> = memo(
           {(pokemons || abilities) && (
             <FilterIcon className="inline-block m-2 w-5 h-5 flex-grow sm:flex-grow-0" />
           )}
-          {pokemons && (
-            <label className="inline-block m-2 w-1/2 sm:w-auto">
-              <span className="sr-only">
-                Filter by name{' '}
-                <span className="text-sm italic text-gray-400">
-                  ({pokemons.length})
+          <div className="flex flex-wrap">
+            {pokemons && (
+              <label className="inline-block m-2">
+                <span className="sr-only">
+                  Filter by name{' '}
+                  <span className="text-sm italic text-gray-400">
+                    ({pokemons.length})
+                  </span>
                 </span>
-              </span>
-              <Autocomplete
-                items={pokemons}
-                getItemValue={(item: NamedAPIResource) => item.name}
-                inputProps={{
-                  className: 'input w-full',
-                  placeholder: 'Filter by name',
-                }}
-                renderItem={(item: NamedAPIResource, isHighlighted) => (
-                  <div
-                    key={item.url}
-                    className={classnames(
-                      'dropdown-list-item',
-                      isHighlighted ? 'dropdown-list-item-selected' : undefined,
-                    )}
+
+                <div className="select">
+                  <select
+                    value={selectedPokemon}
+                    className="capitalize"
+                    onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+                      setSelectedPokemon(e.target.value)
+                      setSelectedAbility('')
+                    }}
                   >
-                    <span className="capitalize">{item.name}</span>
-                  </div>
-                )}
-                shouldItemRender={(item: NamedAPIResource, value: string) =>
-                  item.name.toLowerCase().includes(value.toLowerCase())
-                }
-                value={selectedPokemon}
-                onChange={(e) => {
-                  setSelectedPokemon(e.target.value)
-                  setSelectedAbility('')
-                }}
-                onSelect={(val) => {
-                  setSelectedPokemon(val)
-                  setSelectedAbility('')
-                }}
-                wrapperProps={{
-                  className: 'relative w-full z-10',
-                }}
-              />
-            </label>
-          )}
-          {abilities && (
-            <label className="inline-block m-2 w-1/2 sm:w-auto">
-              <span className="sr-only">
-                Filter by ability{' '}
-                <span className="text-sm italic text-gray-400">
-                  ({abilities.length})
+                    <option value="" className="capitalize">
+                      Filter by name
+                    </option>
+                    {pokemons.map((pokemon) => (
+                      <option
+                        key={pokemon.url}
+                        value={pokemon.name}
+                        className="capitalize"
+                      >
+                        {pokemon.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </label>
+            )}
+            {abilities && (
+              <label className="inline-block m-2">
+                <span className="sr-only">
+                  Filter by ability{' '}
+                  <span className="text-sm italic text-gray-400">
+                    ({abilities.length})
+                  </span>
                 </span>
-              </span>
-              <Autocomplete
-                items={abilities}
-                getItemValue={(item: NamedAPIResource) => item.name}
-                inputProps={{
-                  className: 'input w-full',
-                  placeholder: 'Filter by ability',
-                }}
-                renderItem={(item: NamedAPIResource, isHighlighted) => (
-                  <div
-                    key={item.url}
-                    className={classnames(
-                      'dropdown-list-item',
-                      isHighlighted ? 'dropdown-list-item-selected' : undefined,
-                    )}
+
+                <div className="select">
+                  <select
+                    value={selectedAbility}
+                    className="capitalize"
+                    onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+                      setSelectedPokemon('')
+                      setSelectedAbility(e.target.value)
+                    }}
                   >
-                    <span className="capitalize">{item.name}</span>
-                  </div>
-                )}
-                shouldItemRender={(item: NamedAPIResource, value: string) =>
-                  item.name.toLowerCase().includes(value.toLowerCase())
-                }
-                value={selectedAbility}
-                onChange={(e) => {
-                  setSelectedPokemon('')
-                  setSelectedAbility(e.target.value)
-                }}
-                onSelect={(val) => {
-                  setSelectedPokemon('')
-                  setSelectedAbility(val)
-                }}
-                wrapperProps={{
-                  className: 'relative w-full z-10',
-                }}
-              />
-            </label>
-          )}
+                    <option value="" className="capitalize">
+                      Filter by ability
+                    </option>
+                    {abilities.map((ability) => (
+                      <option
+                        key={ability.url}
+                        value={ability.name}
+                        className="capitalize"
+                      >
+                        {ability.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </label>
+            )}
+          </div>
         </div>
         {filteredPokemons.length > 0 && (
           <div className="flex items-center -mx-2">
