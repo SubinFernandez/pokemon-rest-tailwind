@@ -1,34 +1,32 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+This is a demo web-app listing all Pokemons in the gallery page and showing details in the details page.
 
-## Getting Started
+## Live Demo
+This demo app is hosted on Vercel at <https://pokemon-rest-tailwind.vercel.app/>
 
-First, run the development server:
+## Tech Stack
+- Next.js
+- TypeScript
+- React hooks and Context
+- TailyWind CSS
+- HeroIcons
+- REST APIs from <https://pokeapi.co>
+- Jest and React-Testing-Library
+- ESLint, Husky & Prettier
 
-```bash
-npm run dev
-# or
-yarn dev
-```
+Note: No external state management tool such as MobX or Redux is used in the demo, as this is a simple use-case.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Features
+### Landing Page
+The landing page has the Hero component apart from common components such as Header, sticky Footer 
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+### Gallery Page
+The gallery page has following features:
+- lists Pokemons in a lot of 10, 20 or 50 per page
+- navigation with options of pervious and next pages
+- sort Pokemons by name (Sorting by weight & height is not implemented as they are not part of the Pokemon list REST API)
+- filter by name or ability and to reset any filter
+- gallery page's URL has page offset and items limit as query parameters, useful if URL needs to be sent to someone
+- the page remembers the scroll position while returning from the details page
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
-
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+### Details Page
+The details page shows species data and stats of the selected Pokemon. The URL pattern used is /pokemons/[pokemon name or id]
