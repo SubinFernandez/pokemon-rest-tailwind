@@ -1,87 +1,83 @@
-import React, { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/router";
-import axios, { AxiosError } from "axios";
-import debounce from "lodash/debounce";
+import React, { useEffect, useRef, useState } from 'react'
+import { useRouter } from 'next/router'
+import axios, { AxiosError } from 'axios'
+import debounce from 'lodash/debounce'
 
-import {
-  NamedAPIResource,
-  NamedAPIResourceList,
-} from "@src/types/pokemon.type";
-import { SortByType } from "@src/types/data.types";
+import { NamedAPIResource, NamedAPIResourceList } from '@src/types/pokemon.type'
+import { SortByType } from '@src/types/data.types'
 // @TODO: Debug why '@src/' path fails in Jest test
-import { DEFAULTS, REST_API } from "../../helpers/constants";
+import { DEFAULTS, REST_API } from '../../helpers/constants'
 import {
   PokemonCard,
   PokemonPagination,
   PokemonLimit,
   PokemonSort,
-} from "../../components";
+} from '../../components'
 import {
   makeQueryString,
   nextRouterQueryUpdate,
-} from "../../helpers/next-router-query";
-import { PokemonFilter } from "../pokemon-filter/pokemon-filter";
-import { useAppSettingContext } from "../../contexts/app";
+} from '../../helpers/next-router-query'
+import { PokemonFilter } from '../pokemon-filter/pokemon-filter'
+import { useAppSettingContext } from '../../contexts/app'
 
 export const PokemonList: React.FC = () => {
-  const router = useRouter();
-  const { galleryScrollYPos, setGalleryScrollYPos } = useAppSettingContext();
-  const [pokemons, setPokemons] = useState<NamedAPIResource[]>();
-  const [pokemonsCount, setPokemonsCount] = useState(0);
-  const [pokemonOffset, setPokemonOffset] = useState<number>();
-  const [pokemonLimit, setPokemonLimit] = useState<number>();
-  const [dataFetched, setDataFetched] = useState(false);
+  const router = useRouter()
+  const { galleryScrollYPos, setGalleryScrollYPos } = useAppSettingContext()
+  const [pokemons, setPokemons] = useState<NamedAPIResource[]>()
+  const [pokemonsCount, setPokemonsCount] = useState(0)
+  const [pokemonOffset, setPokemonOffset] = useState<number>()
+  const [pokemonLimit, setPokemonLimit] = useState<number>()
+  const [dataFetched, setDataFetched] = useState(false)
   const [dataFetchError, setDataFetchError] = useState<AxiosError | undefined>(
-    undefined
-  );
-  const [filteredPokemons, setFilteredPokemons] =
-    useState<NamedAPIResource[]>();
-  const [sortedPokemons, setSortedPokemons] = useState<NamedAPIResource[]>();
-  const [sortBy, setSortBy] = useState<SortByType>("none");
-  const saveScrollPosRef = useRef({ save: true });
+    undefined,
+  )
+  const [filteredPokemons, setFilteredPokemons] = useState<NamedAPIResource[]>()
+  const [sortedPokemons, setSortedPokemons] = useState<NamedAPIResource[]>()
+  const [sortBy, setSortBy] = useState<SortByType>('none')
+  const saveScrollPosRef = useRef({ save: true })
 
   const handlePageScroll = () => {
     if (saveScrollPosRef.current.save) {
-      setGalleryScrollYPos(window.scrollY);
+      setGalleryScrollYPos(window.scrollY)
     }
-  };
+  }
 
-  const handlePageScrollDebounced = debounce(handlePageScroll, 50);
+  const handlePageScrollDebounced = debounce(handlePageScroll, 50)
 
   const setPageScroll = () => {
     setTimeout(() => {
-      window.scrollTo({ top: galleryScrollYPos, left: 0, behavior: "smooth" });
-    }, 500);
-  };
+      window.scrollTo({ top: galleryScrollYPos, left: 0, behavior: 'smooth' })
+    }, 500)
+  }
 
   const handlePaginationChange = (pageNumber: number) => {
     // router.push(router.basePath.concat(`?offset=${pokemonLimit * pageNumber}&limit=${pokemonLimit}`))
     if (pokemonLimit) {
-      let currentQuery = router.query;
+      let currentQuery = router.query
       currentQuery = nextRouterQueryUpdate(
         currentQuery,
-        "offset",
-        (pokemonLimit * pageNumber).toString()
-      );
+        'offset',
+        (pokemonLimit * pageNumber).toString(),
+      )
       currentQuery = nextRouterQueryUpdate(
         currentQuery,
-        "limit",
-        pokemonLimit.toString()
-      );
+        'limit',
+        pokemonLimit.toString(),
+      )
       router.push(
-        `${router.asPath.split("?")[0]}/?${makeQueryString(currentQuery)}`
-      );
+        `${router.asPath.split('?')[0]}/?${makeQueryString(currentQuery)}`,
+      )
     }
-  };
+  }
 
   const handlePokemonLimitChange = (limit: string) => {
-    setPokemonLimit(Number(limit));
+    setPokemonLimit(Number(limit))
     router.push(
-      `${router.asPath.split("?")[0]}/?${makeQueryString(
-        nextRouterQueryUpdate(router.query, "limit", limit)
-      )}`
-    );
-  };
+      `${router.asPath.split('?')[0]}/?${makeQueryString(
+        nextRouterQueryUpdate(router.query, 'limit', limit),
+      )}`,
+    )
+  }
 
   /**
    * Upon router update,
@@ -89,26 +85,26 @@ export const PokemonList: React.FC = () => {
    */
   useEffect(() => {
     if (router?.isReady) {
-      const { offset, limit } = router.query;
+      const { offset, limit } = router.query
 
-      setPokemonOffset(Number(offset || DEFAULTS.pokemon.firstPokemon));
-      setPokemonLimit(Number(limit || DEFAULTS.pokemon.pokemonsPerPage));
+      setPokemonOffset(Number(offset || DEFAULTS.pokemon.firstPokemon))
+      setPokemonLimit(Number(limit || DEFAULTS.pokemon.pokemonsPerPage))
 
       if (offset) {
-        const nOffset = Number(offset);
+        const nOffset = Number(offset)
         if (!isNaN(nOffset) && nOffset !== pokemonOffset) {
-          setPokemonOffset(nOffset);
+          setPokemonOffset(nOffset)
         }
       }
 
       if (limit) {
-        const nLimit = Number(limit);
+        const nLimit = Number(limit)
         if (!isNaN(nLimit) && nLimit !== pokemonLimit) {
-          setPokemonLimit(nLimit);
+          setPokemonLimit(nLimit)
         }
       }
     }
-  }, [router]);
+  }, [router])
 
   /**
    * On offset or limit change,
@@ -125,22 +121,22 @@ export const PokemonList: React.FC = () => {
         })
         .then((res) => {
           if (res.data) {
-            const pokemonsResponse: NamedAPIResourceList = res.data;
+            const pokemonsResponse: NamedAPIResourceList = res.data
 
             if (pokemonsResponse?.results) {
-              setPokemons(pokemonsResponse.results);
-              setPokemonsCount(pokemonsResponse.count);
+              setPokemons(pokemonsResponse.results)
+              setPokemonsCount(pokemonsResponse.count)
             }
           }
         })
         .catch((err) => {
-          setDataFetchError(err);
+          setDataFetchError(err)
         })
         .finally(() => {
-          setDataFetched(true);
-        });
+          setDataFetched(true)
+        })
     }
-  }, [pokemonOffset, pokemonLimit]);
+  }, [pokemonOffset, pokemonLimit])
 
   /**
    * On component render set the scroll position, if any
@@ -149,15 +145,15 @@ export const PokemonList: React.FC = () => {
    * the gallery page from the details page
    */
   useEffect(() => {
-    setPageScroll();
+    setPageScroll()
 
-    window.addEventListener("scroll", handlePageScrollDebounced);
+    window.addEventListener('scroll', handlePageScrollDebounced)
 
     return () => {
-      saveScrollPosRef.current.save = false;
-      window.removeEventListener("scroll", handlePageScrollDebounced);
-    };
-  }, []);
+      saveScrollPosRef.current.save = false
+      window.removeEventListener('scroll', handlePageScrollDebounced)
+    }
+  }, [])
 
   /**
    * Maintain a sorted copy of the Pokemon array
@@ -166,16 +162,16 @@ export const PokemonList: React.FC = () => {
     setSortedPokemons(
       [...((filteredPokemons || pokemons || []) as NamedAPIResource[])]?.sort(
         (e1, e2) => {
-          if (sortBy === "name") {
-            const ret = e1.name > e2.name ? 1 : -1;
-            return ret;
+          if (sortBy === 'name') {
+            const ret = e1.name > e2.name ? 1 : -1
+            return ret
           } else {
-            return 0;
+            return 0
           }
-        }
-      )
-    );
-  }, [filteredPokemons, pokemons, sortBy]);
+        },
+      ),
+    )
+  }, [filteredPokemons, pokemons, sortBy])
 
   return (
     <div data-name="PokemonList" className="max-w-screen-xl px-4 my-4 mx-auto">
@@ -267,5 +263,5 @@ export const PokemonList: React.FC = () => {
         </>
       )}
     </div>
-  );
-};
+  )
+}

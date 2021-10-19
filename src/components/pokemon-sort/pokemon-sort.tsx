@@ -1,37 +1,37 @@
-import React, { memo, useEffect } from "react";
+import React, { memo, useEffect } from 'react'
 
-import { SortByType, SortOptions } from "@src/types/data.types";
-import { LOCAL_STORAGE_KYES } from "../../helpers/constants";
+import { SortByType, SortOptions } from '@src/types/data.types'
+import { LOCAL_STORAGE_KYES } from '../../helpers/constants'
 
 interface PokemonSortProps {
-  sortBy: SortByType;
-  onSortChange: (newSortBy: SortByType) => void;
+  sortBy: SortByType
+  onSortChange: (newSortBy: SortByType) => void
 }
 
 const PokemonSort: React.FC<PokemonSortProps> = ({ sortBy, onSortChange }) => {
   const sortOptions: SortOptions[] = [
     {
       id: 0,
-      label: "None",
-      type: "none",
+      label: 'None',
+      type: 'none',
     },
     {
       id: 1,
-      label: "Name",
-      type: "name",
+      label: 'Name',
+      type: 'name',
     },
-  ];
+  ]
 
   const handleSortChange = (newSortBy: SortByType) => {
-    localStorage?.setItem(LOCAL_STORAGE_KYES.gallery.sort, newSortBy);
-    onSortChange(newSortBy);
-  };
+    localStorage?.setItem(LOCAL_STORAGE_KYES.gallery.sort, newSortBy)
+    onSortChange(newSortBy)
+  }
 
   useEffect(() => {
     onSortChange(
-      localStorage?.getItem(LOCAL_STORAGE_KYES.gallery.sort) as SortByType
-    );
-  }, [onSortChange]);
+      localStorage?.getItem(LOCAL_STORAGE_KYES.gallery.sort) as SortByType,
+    )
+  }, [onSortChange])
 
   return (
     <label data-name="PokemonSort" className="whitespace-nowrap">
@@ -51,7 +51,7 @@ const PokemonSort: React.FC<PokemonSortProps> = ({ sortBy, onSortChange }) => {
         </select>
       </div>
     </label>
-  );
-};
+  )
+}
 
-export default memo(PokemonSort);
+export default memo(PokemonSort)
