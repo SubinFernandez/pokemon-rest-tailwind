@@ -1,23 +1,33 @@
-import React from 'react'
-import { render } from '@testing-library/react'
-import { axe, toHaveNoViolations } from 'jest-axe'
-import { PokemonCard } from './pokemon-card'
-import { NamedAPIResource } from '@src/types/pokemon.type'
+import React from "react";
+import { render } from "@testing-library/react";
+import { axe, toHaveNoViolations } from "jest-axe";
+import { PokemonCard } from "./";
+import { NamedAPIResource } from "@src/types/pokemon.type";
 
-expect.extend(toHaveNoViolations)
+expect.extend(toHaveNoViolations);
 
 const mockPokemonFetchProps: NamedAPIResource = {
-  name: 'mockemon',
-  url: 'https://www.example.com'
-}
+  name: "mockemon",
+  url: "https://www.example.com",
+};
 
-it('Renders the PokemonCard component', () => {
-  render(<PokemonCard dataFetchProps={mockPokemonFetchProps} />)
-})
+const TestParent: React.FC = () => {
+  return (
+    <div role="list">
+      <PokemonCard
+        name={mockPokemonFetchProps.name}
+        url={mockPokemonFetchProps.url}
+      />
+    </div>
+  );
+};
 
-it('PokemonCard component should not have basic accessibility issues', async () => {
-  const { container } = render(<PokemonCard dataFetchProps={mockPokemonFetchProps} />)
-  const results = await axe(container)
-  expect(results).toHaveNoViolations()
-})
+it("Renders the PokemonCard component", () => {
+  render(<TestParent />);
+});
 
+it("PokemonCard component should not have basic accessibility issues", async () => {
+  const { container } = render(<TestParent />);
+  const results = await axe(container);
+  expect(results).toHaveNoViolations();
+});
