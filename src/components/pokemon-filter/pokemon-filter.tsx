@@ -211,7 +211,7 @@ export const PokemonFilter: React.FC<PokemonFilterProps> = memo(
                   setSelectedAbility(val)
                 }}
                 wrapperProps={{
-                  className: 'w-full',
+                  className: 'relative w-full z-10',
                 }}
               />
             </label>
